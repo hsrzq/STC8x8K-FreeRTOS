@@ -21,6 +21,15 @@
           }
         ],
         "folders": []
+      },
+      {
+        "name": "MemMang",
+        "files": [
+          {
+            "path": "FreeRTOS/Source/portable/MemMang/heap_1.c"
+          }
+        ],
+        "folders": []
       }
     ]
   },
