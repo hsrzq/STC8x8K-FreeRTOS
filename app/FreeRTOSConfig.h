@@ -28,6 +28,7 @@
 #define FREERTOS_CONFIG_H
 
 #include <stdint.h>
+#include "STC8x8K.h"
 
 /* THE VALUE FOR configSTACK_START MUST BE OBTAINED FROM THE .MEM FILE. */
 extern __data uint8_t _start__stack;

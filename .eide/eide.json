@@ -3,7 +3,8 @@
   "type": "C51",
   "dependenceList": [],
   "srcDirs": [
-    "app"
+    "app",
+    "FreeRTOS/Source/portable/SDCC/STC8x8K"
   ],
   "virtualFolder": {
     "name": "<virtual_root>",
@@ -66,7 +67,8 @@
         "name": "default",
         "incList": [
           "FreeRTOS/Source/include",
-          "app"
+          "app",
+          "FreeRTOS/Source/portable/SDCC/STC8x8K"
         ],
         "libList": [],
         "sourceDirList": [],
