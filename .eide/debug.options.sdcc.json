@@ -1,0 +1,21 @@
+{
+    "version": 3,
+    "beforeBuildTasks": [],
+    "afterBuildTasks": [],
+    "global": {
+        "device": "mcs51",
+        "optimize-type": "speed",
+        "misc-controls": "--model-large --less-pedantic --iram-size ${MCU_IRAM_SIZE} --xram-size ${MCU_XRAM_SIZE} --code-size ${MCU_CODE_SIZE}",
+        "stack-auto": true,
+        "int-long-reent": true,
+        "float-reent": true
+    },
+    "c/cpp-compiler": {
+        "language-c": "c99"
+    },
+    "asm-compiler": {},
+    "linker": {
+        "$mainFileName": "main",
+        "output-format": "hex"
+    }
+}

@@ -1,0 +1,52 @@
+{
+  "name": "STC8x8K",
+  "type": "C51",
+  "dependenceList": [],
+  "srcDirs": [],
+  "virtualFolder": {
+    "name": "<virtual_root>",
+    "files": [],
+    "folders": []
+  },
+  "outDir": "build",
+  "deviceName": null,
+  "packDir": null,
+  "miscInfo": {
+    "uid": "a28a48d2791cecf8e789fe27d03bcfe8"
+  },
+  "targets": {
+    "Debug": {
+      "excludeList": [],
+      "toolchain": "SDCC",
+      "compileConfig": {
+        "options": "null"
+      },
+      "uploader": "stcgal",
+      "uploadConfig": {
+        "bin": "",
+        "eepromImgPath": "null",
+        "extraOptions": "",
+        "options": ".eide/stc.flash.json"
+      },
+      "uploadConfigMap": {
+        "Custom": {
+          "bin": "",
+          "commandLine": "",
+          "eraseChipCommand": ""
+        }
+      },
+      "custom_dep": {
+        "name": "default",
+        "incList": [],
+        "libList": [],
+        "sourceDirList": [],
+        "defineList": [
+          "MCU_IRAM_SIZE=${MCU_IRAM_SIZE}",
+          "MCU_XRAM_SIZE=${MCU_XRAM_SIZE}",
+          "MCU_CODE_SIZE=${MCU_CODE_SIZE}"
+        ]
+      }
+    }
+  },
+  "version": "3.3"
+}
