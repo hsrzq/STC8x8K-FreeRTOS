@@ -6,7 +6,23 @@
   "virtualFolder": {
     "name": "<virtual_root>",
     "files": [],
-    "folders": []
+    "folders": [
+      {
+        "name": "FreeRTOS",
+        "files": [
+          {
+            "path": "FreeRTOS/Source/list.c"
+          },
+          {
+            "path": "FreeRTOS/Source/queue.c"
+          },
+          {
+            "path": "FreeRTOS/Source/tasks.c"
+          }
+        ],
+        "folders": []
+      }
+    ]
   },
   "outDir": "build",
   "deviceName": null,
@@ -37,7 +53,9 @@
       },
       "custom_dep": {
         "name": "default",
-        "incList": [],
+        "incList": [
+          "FreeRTOS/Source/include"
+        ],
         "libList": [],
         "sourceDirList": [],
         "defineList": [
