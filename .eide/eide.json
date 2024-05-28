@@ -2,7 +2,9 @@
   "name": "STC8x8K",
   "type": "C51",
   "dependenceList": [],
-  "srcDirs": [],
+  "srcDirs": [
+    "app"
+  ],
   "virtualFolder": {
     "name": "<virtual_root>",
     "files": [],
@@ -63,7 +65,8 @@
       "custom_dep": {
         "name": "default",
         "incList": [
-          "FreeRTOS/Source/include"
+          "FreeRTOS/Source/include",
+          "app"
         ],
         "libList": [],
         "sourceDirList": [],
