@@ -5,36 +5,75 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-__data static uint8_t ucStackBytes;
-__xdata static StackType_t *__data pxXRAMStack;
-__data static StackType_t *__data pxRAMStack;
-
-typedef void TCB_t;
-extern volatile TCB_t *volatile pxCurrentTCB;
-
-#define portCOPY_STACK_TO_XRAM()                                                       \
-    {                                                                                  \
-        pxXRAMStack  = (__xdata StackType_t *)*((__xdata StackType_t **)pxCurrentTCB); \
-        pxRAMStack   = (__data StackType_t * __data)(configSTACK_START - 1);           \
-        ucStackBytes = SP - (configSTACK_START - 1);                                   \
-        *pxXRAMStack = ucStackBytes;                                                   \
-        while (ucStackBytes--) {                                                       \
-            *(++pxXRAMStack) = *(++pxRAMStack);                                        \
-        }                                                                              \
-    }
-
-#define portCOPY_XRAM_TO_STACK()                                                       \
-    {                                                                                  \
-        pxXRAMStack  = (__xdata StackType_t *)*((__xdata StackType_t **)pxCurrentTCB); \
-        pxRAMStack   = (__data StackType_t * __data)(configSTACK_START - 1);           \
-        ucStackBytes = pxXRAMStack[0];                                                 \
-        while (ucStackBytes--) {                                                       \
-            *(++pxRAMStack) = *(++pxXRAMStack);                                        \
-        }                                                                              \
-        SP = (uint8_t)pxRAMStack;                                                      \
-    }
-
 // clang-format off
+
+/*-----------------------------------------------------------
+ * R0       = __start__stack - 1
+ * (R2, R3) = pxCurrentTCB
+ * (R4, R5) = pxCurrentTCB->pxTopOfStack
+ * DPTR     = (R4, R5)
+ */
+#define OBTAIN_STACK_ADDRESS()      \
+    {                               \
+        __asm__("mov R0,#(__start__stack - 1)");\
+        __asm__("mov DPTR,#_pxCurrentTCB");     \
+        __asm                       \
+        movx    A, @DPTR            \
+        mov     R2, A               \
+        inc     DPTR                \
+        movx    A, @DPTR            \
+        mov     R3, A               \
+        mov     DPL, R2             \
+        mov     DPH, R3             \
+        movx    A, @DPTR            \
+        mov     R4, A               \
+        inc     DPTR                \
+        movx    A, @DPTR            \
+        mov     R5, A               \
+        mov     DPL, R4             \
+        mov     DPH, R5             \
+        __endasm;                   \
+    }
+
+/*-----------------------------------------------------------
+ * R7 = STACK_LENGTH
+ */
+#define portCOPY_STACK_TO_XRAM()    \
+    {                               \
+    OBTAIN_STACK_ADDRESS();         \
+        __asm                       \
+        mov     A, _SP              \
+        subb    A, R0               \
+        mov     R7, A               \
+        movx    @DPTR, A            \
+    1000$:                          \
+        inc     R0                  \
+        mov     A, @R0              \
+        inc     DPTR                \
+        movx    @DPTR, A            \
+        djnz    R7, 1000$           \
+        __endasm;                   \
+    }
+
+/*-----------------------------------------------------------
+ * R7 = STACK_LENGTH
+ */
+#define portCOPY_XRAM_TO_STACK()    \
+    {                               \
+    OBTAIN_STACK_ADDRESS();         \
+        __asm                       \
+        movx    A, @DPTR            \
+        mov     R7, A               \
+    2000$:                          \
+        inc     DPTR                \
+        movx    A, @DPTR            \
+        inc     R0                  \
+        mov     @R0, A              \
+        djnz    R7, 2000$           \
+        mov    _SP, R0              \
+        __endasm;                   \
+    }
+
 #define portSAVE_CONTEXT()          \
     {                               \
         __asm                       \
@@ -84,6 +123,7 @@ extern volatile TCB_t *volatile pxCurrentTCB;
         pop ACC                     \
         __endasm;                   \
     }
+
 // clang-format on
 
 StackType_t *pxPortInitialiseStack(StackType_t *pxTopOfStack, TaskFunction_t pxCode, void *pvParameters)
